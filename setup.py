@@ -19,29 +19,30 @@
 
 from setuptools import setup, Extension
 
-setup(name="lzss",
-      version='0.3',
-      description="LZSS compression algorithm",
-      author="Guillaume Tucker",
-      author_email="guillaume.tucker@plasticlogic.com",
-      maintainer="rumbah",
-      maintainer_email="rumbah@users.noreply.github.com",
-      url="https://github.com/rumbah/pylzss",
-      license="GNU LGPL v3",
-      platforms=["Windows", "Linux"],
-      ext_modules=[Extension(
-            "lzss",
-            sources=["pylzss.c"],
-            include_dirs=['./include'],
-            language="C")],
-      long_description="""\
+setup(
+    name="lzss",
+    version='0.3.1',
+    description="LZSS compression algorithm",
+    author="Guillaume Tucker",
+    author_email="guillaume.tucker@plasticlogic.com",
+    maintainer="m1sta",
+    maintainer_email="adamhamdi31@gmail.com",
+    url="https://github.com/m1sta/pylzss",
+    license="GNU LGPL v3",
+    platforms=["Windows", "Linux"],
+    ext_modules=[
+        Extension(
+            "lzss", sources=["pylzss.c"], include_dirs=['./include'], language="C"
+        )
+    ],
+    long_description="""\
 A package for decoding / encoding LZSS-compressed data.""",
-
     classifiers=[
-                "Programming Language :: Python",
-                "Programming Language :: Python :: 3",
-                "Programming Language :: Python :: 2",
-                "Topic :: System :: Archiving :: Compression",
-                "Development Status :: 3 - Alpha",
-                "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
-    ])
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 2",
+        "Topic :: System :: Archiving :: Compression",
+        "Development Status :: 3 - Alpha",
+        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    ],
+)
