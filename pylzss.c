@@ -1,3 +1,4 @@
+#define PY_SSIZE_T_CLEAN
 #include <py3c.h>
 
 #include <stdlib.h>
@@ -310,7 +311,7 @@ static PyObject *pylzss_process(PyObject *m, PyObject *args,
 {
 	static char *kwlist[] = { "data", NULL };
 	char *data;
-	size_t data_length = 0;
+	Py_ssize_t data_length = 0;
 
 	struct pylzss_buffer ibuf;
 	struct pylzss_buffer obuf;
@@ -323,13 +324,13 @@ static PyObject *pylzss_process(PyObject *m, PyObject *args,
 		return NULL;
 
 	ibuf.data = (uint8_t *)data;
-	ibuf.length = data_length;
+	ibuf.length = (size_t)data_length;
 	ibuf.cur = 0;
 
 	if (compress)
-		obuf.length = data_length / 2;
+		obuf.length = (size_t)(data_length / 2);
 	else
-		obuf.length = data_length * 2;
+		obuf.length = (size_t)(data_length * 2);
 
 	obuf.cur = 0;
 	obuf.data = PyMem_Malloc(obuf.length);
