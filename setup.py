@@ -21,13 +21,13 @@ from setuptools import setup, Extension
 
 setup(
     name="pylzss",
-    version="0.3.1",
+    version="0.3.2",
     description="LZSS compression algorithm",
     author="Guillaume Tucker",
     author_email="guillaume.tucker@plasticlogic.com",
     maintainer="m1sta",
     maintainer_email="adamhamdi31@gmail.com",
-    url="https://github.com/m1sta/pylzss",
+    url="https://github.com/m1stadev/pylzss",
     license="GNU LGPL v3",
     platforms=["Windows", "Linux"],
     ext_modules=[
