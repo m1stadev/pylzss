@@ -21,7 +21,7 @@ from setuptools import setup, Extension
 
 setup(
     name="pylzss",
-    version="0.3.2",
+    version="0.3.4",
     description="LZSS compression algorithm",
     author="Guillaume Tucker",
     author_email="guillaume.tucker@plasticlogic.com",
@@ -29,7 +29,7 @@ setup(
     maintainer_email="adamhamdi31@gmail.com",
     url="https://github.com/m1stadev/pylzss",
     license="GNU LGPL v3",
-    platforms=["Windows", "Linux"],
+    platforms=["Windows", "Linux", "macOS"],
     ext_modules=[
         Extension(
             "lzss", sources=["pylzss.c"], include_dirs=["./include"], language="C"
