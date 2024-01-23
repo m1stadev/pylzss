@@ -324,7 +324,7 @@ static PyObject *pylzss_process(PyObject *m, PyObject *args,
 	PyObject *output;
 	int stat;
 
-	if (!PyArg_ParseTupleAndKeywords(args, kw, "s#i", kwlist,
+	if (!PyArg_ParseTupleAndKeywords(args, kw, "s#|i", kwlist,
 					 &data, &data_length, &initial_buffer_values))
 		return NULL;
 
