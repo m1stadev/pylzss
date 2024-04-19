@@ -1,0 +1,31 @@
+[project]
+name = "pylzss"
+version = "0.3.7"
+description = "A Python library for decoding/encoding LZSS-compressed data."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "LGPL-3.0-only"}
+authors = [
+    { name = "Guillaume Tucker", email = "guillaume.tucker@plasticlogic.com" }
+]
+maintainers = [
+    { name = "m1sta", email = "adamhamdi31@gmail.com" }
+]
+
+[project.urls]
+"Repository" = "https://github.com/m1stadev/pylzss"
+"Bug Tracker" = "https://github.com/m1stadev/pylzss/issues"
+
+[tool.ruff]
+target-version = "py38"
+
+[tool.ruff.lint]
+extend-select = ["I"]
+ignore = ["E722"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
