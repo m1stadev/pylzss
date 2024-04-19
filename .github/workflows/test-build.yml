@@ -1,0 +1,31 @@
+name: Build wheels for Linux/macOS
+
+on: workflow_dispatch
+
+jobs:
+  build_wheels:
+    name: Build ${{ matrix.os }} wheels
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+  
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.17.0
+        env:
+          CIBW_ARCHS_LINUX: aarch64
+          CIBW_ARCHS_MACOS: arm64
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ runner.os }}
+          path: ./wheelhouse/*.whl
