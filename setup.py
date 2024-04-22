@@ -25,8 +25,8 @@ setup(
     ext_modules=[
         Extension(
             'lzss',
-            sources=[Path('src/pylzss.c')],
-            include_dirs=[Path('src/include')],
+            sources=[str(Path('src/pylzss.c'))],
+            include_dirs=[str(Path('src/include'))],
             extra_compile_args=['-Wno-everything'],
         )
     ]
