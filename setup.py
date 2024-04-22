@@ -17,14 +17,16 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pathlib import Path
+
 from setuptools import Extension, setup
 
 setup(
     ext_modules=[
         Extension(
             'lzss',
-            sources=['pylzss.c'],
-            include_dirs=['include'],
+            sources=[Path('src/pylzss.c')],
+            include_dirs=[Path('src/include')],
             extra_compile_args=['-Wno-everything'],
         )
     ]
