@@ -1,0 +1,46 @@
+name: Build wheels for Linux/macOS/Windows and build sdist
+
+on: workflow_dispatch
+
+jobs:
+  build_wheels:
+    name: Build ${{ matrix.os }} wheels
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+  
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.17.0
+        env:
+          CIBW_ARCHS_LINUX: x86_64 i686 aarch64
+          CIBW_ARCHS_MACOS: x86_64 arm64
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ runner.os }}
+          path: ./wheelhouse/*.whl
+
+  build_sdist:
+      name: Build source distribution
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Build sdist
+          run: pipx run build --sdist
+
+        - uses: actions/upload-artifact@v4
+          with:
+            name: sdist
+            path: dist/*.tar.gz
