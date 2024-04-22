@@ -1,6 +1,6 @@
 [project]
 name = "pylzss"
-version = "0.3.7"
+version = "0.3.7-1"
 description = "A Python library for decoding/encoding LZSS-compressed data."
 readme = "README.md"
 requires-python = ">=3.8"
