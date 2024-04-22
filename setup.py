@@ -25,6 +25,7 @@ setup(
             'lzss',
             sources=['pylzss.c'],
             include_dirs=['include'],
+            extra_compile_args=['-Wno-everything'],
         )
     ]
 )
