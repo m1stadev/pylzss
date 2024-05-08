@@ -150,8 +150,8 @@ int lzss_encode(struct lzss_io *io, unsigned int initial_buffer_byte_values)
 	for (i = s; i < r; i++) {
 		/* Clear the buffer with
 		any character that will appear often. */
-		ctx.text_buf[i] = (unsigned char*)(&initial_buffer_byte_values)[i%4];
-        }
+		ctx.text_buf[i] = ((unsigned char *)&initial_buffer_byte_values)[i%4];
+    }
 
 	for (len = 0; len < F && ((c = io->rd(io->i)) != EOF); len++)
 		ctx.text_buf[r + len] = c;  /* Read F bytes into the last F bytes of
@@ -220,7 +220,7 @@ int lzss_decode(struct lzss_io *io, unsigned int initial_buffer_byte_values)
 	unsigned int  flags;
 	unsigned char text_buf[N + F - 1];
 	
-	for (i = 0; i < N - F; i++) text_buf[i] = (unsigned char*)(&initial_buffer_byte_values)[i%4];
+	for (i = 0; i < N - F; i++) text_buf[i] = ((unsigned char *)&initial_buffer_byte_values)[i%4];
 	r = N - F;  flags = 0;
 	for ( ; ; ) {
 		if (((flags >>= 1) & 256) == 0) {
