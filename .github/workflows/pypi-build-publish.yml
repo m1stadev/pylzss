@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: PyPI
-      url: https://pypi.org/p/lzfse
+      url: https://pypi.org/p/pylzss
     permissions:
       id-token: write
 
