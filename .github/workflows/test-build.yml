@@ -19,11 +19,15 @@ jobs:
         with:
           platforms: arm64
   
+      - name: Set up uv
+        uses: yezz123/setup-uv@v4
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.22.0
         env:
           CIBW_ARCHS_LINUX: x86_64 i686 aarch64
           CIBW_ARCHS_MACOS: x86_64 arm64
+          CIBW_BUILD_FRONTEND: build[uv]
 
       - uses: actions/upload-artifact@v4
         with:
