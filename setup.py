@@ -21,7 +21,7 @@ from setuptools import setup, Extension
 
 setup(
     name="pylzss",
-    version='0.3.4-1",
+    version="0.3.4-1",
     description="LZSS compression algorithm",
     author="Guillaume Tucker",
     author_email="guillaume.tucker@plasticlogic.com",
