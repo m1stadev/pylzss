@@ -17,11 +17,11 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from setuptools import setup, Extension
+from setuptools import Extension, setup
 
 setup(
     name="pylzss",
-    version="0.3.4-1",
+    version="0.3.4",
     description="LZSS compression algorithm",
     author="Guillaume Tucker",
     author_email="guillaume.tucker@plasticlogic.com",
