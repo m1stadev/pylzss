@@ -26,8 +26,9 @@ jobs:
         uses: yezz123/setup-uv@v4
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.22.0
+        uses: pypa/cibuildwheel@v4.3.1
         env:
+          CIBW_BUILD: cp314-* cp315-*
           CIBW_ARCHS_LINUX: x86_64 i686 aarch64
           CIBW_ARCHS_MACOS: x86_64 arm64
           CIBW_BUILD_FRONTEND: build[uv]
