@@ -21,13 +21,16 @@ from __future__ import print_function
 
 import os
 import sys
-import lzss
 import tempfile
+
+import lzss
+
 
 def test_buffer(data):
     data_lzss = lzss.encode(data)
     data_orig = lzss.decode(data_lzss)
     return data == data_orig
+
 
 def test_file(data):
     tmp_in = tempfile.NamedTemporaryFile('wb', delete=False)
@@ -49,6 +52,7 @@ def test_file(data):
 
     return data == data_orig
 
+
 def main(argv):
     data = b"""\
 Lorem ipsum dolor sit amet, consectetur
@@ -66,20 +70,20 @@ est laborum."""
 
     result = True
 
-    tests = { 'buffer': test_buffer, 'file': test_file }
+    tests = {'buffer': test_buffer, 'file': test_file}
 
     for name, f in tests.items():
-        print("Test: {}... ".format(name), end='')
+        print('Test: {}... '.format(name), end='')
         if f(data) is False:
             result = False
-            print("FAILED")
+            print('FAILED')
         else:
-            print("PASSED")
+            print('PASSED')
 
     if result is True:
-        print("All tests passed OK.")
+        print('All tests passed OK.')
     else:
-        print("Some tests failed.")
+        print('Some tests failed.')
 
     return result
 

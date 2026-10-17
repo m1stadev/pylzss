@@ -26,7 +26,7 @@ setup(
         Extension(
             'lzss',
             sources=[str(Path('src/pylzss.c'))],
-            include_dirs=[str(Path('src/include'))]
+            include_dirs=[str(Path('src/include'))],
         )
     ]
 )
