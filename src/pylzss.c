@@ -139,6 +139,9 @@ int lzss_encode(struct lzss_io *io, unsigned int initial_buffer_byte_values)
 	unsigned char  code_buf[17], mask;
 
 	struct lzss ctx;
+	/* The tail of the ring buffer is compared against during matching before
+	   it is filled, so start from a deterministic all-zero state. */
+	memset(ctx.text_buf, 0, sizeof(ctx.text_buf));
 	lzss_init(&ctx);  /* initialize trees */
 
 	code_buf[0] = 0;  /* code_buf[1..16] saves eight units of code, and
@@ -219,7 +222,10 @@ int lzss_decode(struct lzss_io *io, unsigned int initial_buffer_byte_values)
 	int  i, j, k, r, c;
 	unsigned int  flags;
 	unsigned char text_buf[N + F - 1];
-	
+
+	/* A corrupt stream may reference ring buffer slots that were never
+	   written; make them deterministic instead of leaking stack memory. */
+	memset(text_buf, 0, sizeof(text_buf));
 	for (i = 0; i < N - F; i++) text_buf[i] = ((unsigned char *)&initial_buffer_byte_values)[i%4];
 	r = N - F;  flags = 0;
 	for ( ; ; ) {
@@ -251,7 +257,12 @@ struct pylzss_buffer {
 	uint8_t *data;
 	size_t length;
 	size_t cur;
+	int failed;                  /**< set when growing the buffer failed */
 };
+
+/* Minimum growth step of the output buffer, so that tiny initial sizes
+   (data_length / 2 is 0 or 1 for short inputs) still grow. */
+#define PYLZSS_MIN_GROWTH 64
 
 /* -- private functions -- */
 
@@ -338,6 +349,7 @@ static PyObject *pylzss_process(PyObject *m, PyObject *args,
 		obuf.length = (size_t)(data_length * 2);
 
 	obuf.cur = 0;
+	obuf.failed = 0;
 	obuf.data = PyMem_Malloc(obuf.length);
 
 	if (obuf.data == NULL) {
@@ -355,7 +367,14 @@ static PyObject *pylzss_process(PyObject *m, PyObject *args,
 	else
 		stat = lzss_decode(&io, initial_buffer_values);
 
+	if (obuf.failed) {
+		PyMem_Free(obuf.data);
+		PyErr_NoMemory();
+		return NULL;
+	}
+
 	if (stat) {
+		PyMem_Free(obuf.data);
 		PyErr_SetString(pylzss_error, "Failed to process buffer");
 		return NULL;
 	}
@@ -376,9 +395,28 @@ static int pylzss_buf_rd(struct pylzss_buffer *buffer)
 
 static int pylzss_buf_wr(int c, struct pylzss_buffer *buffer)
 {
+	if (buffer->failed)
+		return EOF;
+
 	if (buffer->cur == buffer->length) {
-		buffer->length += buffer->length / 2;
-		buffer->data = PyMem_Realloc(buffer->data, buffer->length);
+		size_t growth = buffer->length / 2;
+		size_t new_length;
+		uint8_t *new_data;
+
+		if (growth < PYLZSS_MIN_GROWTH)
+			growth = PYLZSS_MIN_GROWTH;
+		new_length = buffer->length + growth;
+		if (new_length < buffer->length) {  /* overflow */
+			buffer->failed = 1;
+			return EOF;
+		}
+		new_data = PyMem_Realloc(buffer->data, new_length);
+		if (new_data == NULL) {
+			buffer->failed = 1;
+			return EOF;
+		}
+		buffer->data = new_data;
+		buffer->length = new_length;
 	}
 
 	buffer->data[buffer->cur++] = (uint8_t)c;
