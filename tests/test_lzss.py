@@ -1,5 +1,8 @@
 import hashlib
+import os
 import random
+import subprocess
+import sys
 
 import lzss
 import pytest
@@ -62,3 +65,23 @@ def test_initial_buffer_values():
         lzss.decompress(bytes.fromhex('00000f'), initial_buffer_values=0x41414141)
         == b'A' * 18
     )
+
+
+def test_small_outputs_do_not_overflow_buffer():
+    # The output buffer starts at len(data) // 2 bytes for compression, which is
+    # 0 or 1 for tiny inputs and previously never grew, writing out of bounds.
+    # The debug allocator detects writes past the end of a block.
+    code = (
+        'import lzss\n'
+        'for n in range(0, 64):\n'
+        '    data = bytes(range(n))\n'
+        '    assert lzss.decompress(lzss.compress(data)) == data\n'
+        'print("ok")\n'
+    )
+    env = dict(os.environ, PYTHONMALLOC='debug')
+    result = subprocess.run(
+        [sys.executable, '-c', code], env=env, capture_output=True, text=True
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == 'ok'
+    assert 'Debug memory block' not in result.stderr
