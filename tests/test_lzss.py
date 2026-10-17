@@ -67,6 +67,13 @@ def test_initial_buffer_values():
     )
 
 
+def test_unwritten_window_is_deterministic():
+    # A corrupt stream referencing the not-yet-written tail of the ring buffer
+    # must not leak uninitialized stack memory.
+    for _ in range(16):
+        assert lzss.decompress(bytes.fromhex('00eff0')) == b'\0' * 3
+
+
 def test_small_outputs_do_not_overflow_buffer():
     # The output buffer starts at len(data) // 2 bytes for compression, which is
     # 0 or 1 for tiny inputs and previously never grew, writing out of bounds.

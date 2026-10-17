@@ -139,6 +139,9 @@ int lzss_encode(struct lzss_io *io, unsigned int initial_buffer_byte_values)
 	unsigned char  code_buf[17], mask;
 
 	struct lzss ctx;
+	/* The tail of the ring buffer is compared against during matching before
+	   it is filled, so start from a deterministic all-zero state. */
+	memset(ctx.text_buf, 0, sizeof(ctx.text_buf));
 	lzss_init(&ctx);  /* initialize trees */
 
 	code_buf[0] = 0;  /* code_buf[1..16] saves eight units of code, and
@@ -219,7 +222,10 @@ int lzss_decode(struct lzss_io *io, unsigned int initial_buffer_byte_values)
 	int  i, j, k, r, c;
 	unsigned int  flags;
 	unsigned char text_buf[N + F - 1];
-	
+
+	/* A corrupt stream may reference ring buffer slots that were never
+	   written; make them deterministic instead of leaking stack memory. */
+	memset(text_buf, 0, sizeof(text_buf));
 	for (i = 0; i < N - F; i++) text_buf[i] = ((unsigned char *)&initial_buffer_byte_values)[i%4];
 	r = N - F;  flags = 0;
 	for ( ; ; ) {
