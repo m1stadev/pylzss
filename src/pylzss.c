@@ -17,9 +17,6 @@
 		CompuServe	74050,1022
 **************************************************************/
 
-/* If match length <= P then output one character */
-static const unsigned LZSS_P = 1;
-
 #define N		 4096	/* size of ring buffer */
 #define F		   18	/* upper limit for match_length */
 #define THRESHOLD	2   /* encode string into position and length

@@ -4,7 +4,7 @@ version = "0.3.9"
 description = "A Python library for decoding/encoding LZSS-compressed data."
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "LGPL-3.0-only"}
+license = "LGPL-3.0-only"
 authors = [
     { name = "Guillaume Tucker", email = "guillaume.tucker@plasticlogic.com" }
 ]
